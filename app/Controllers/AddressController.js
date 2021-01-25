@@ -1,5 +1,7 @@
 const express=require('express')
 const router=express.Router()
+const { applyOperation } = require('fast-json-patch');
+// const applyOperation = require('fast-json-patch').applyOperation;
 const {Address}=require('../Model/Address')
 const { authenticateUser}=require('../Middleware/authentication')
 
@@ -13,17 +15,20 @@ router.post('/add',authenticateUser,(req,res)=>{
     .catch(err=>res.send(err))
 })
 
-// http://localhost:3005/address/updateaddress/:id
-router.patch('/updateaddress/:id',authenticateUser,(req,res)=>{
-    const id=req.params.id
-    const body=req.body
-    Address.findByIdAndUpdate({_id:id},body,{new:true,runValidators:true})
-    .then(adres=>{
-        res.send(adres)
-    })
-    .catch(err=>{
-        res.send(err)
-    })
+// http://localhost:3005/address/updateaddress/
+router.patch('/updateaddress',authenticateUser,(req,res)=>{
+    
+    var document=req.body.document
+    var patch=req.body.patch
+    document = jsonpatch.applyPatch(document, patch).newDocument;
+
+ 
+    if(document){
+        res.send(document)
+    }
+    else(
+        res.send('err')
+    )
    
 })
 
