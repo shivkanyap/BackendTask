@@ -4,6 +4,8 @@ const { applyOperation } = require('fast-json-patch');
 // const applyOperation = require('fast-json-patch').applyOperation;
 const {Address}=require('../Model/Address')
 const { authenticateUser}=require('../Middleware/authentication')
+const  jsonpatch =require('json-patch');
+// import * as jsonpatch from 'fast-json-patch/index.mjs';
 
 
 router.post('/add',authenticateUser,(req,res)=>{
@@ -20,8 +22,8 @@ router.patch('/updateaddress',authenticateUser,(req,res)=>{
     
     var document=req.body.document
     var patch=req.body.patch
-    document = jsonpatch.applyPatch(document, patch).newDocument;
-
+    document = jsonpatch.apply(document, patch).newDocument;
+ 
  
     if(document){
         res.send(document)
